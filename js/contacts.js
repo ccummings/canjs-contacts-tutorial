@@ -43,25 +43,25 @@ function($){
 		}
 	];
 
-	$.fixture('GET /contacts', function(){
+	can.fixture('GET /contacts', function(){
 		return [CONTACTS];
 	});
 
 	// create
 	var id= 4;
-	$.fixture("POST /contacts", function(){
+	can.fixture("POST /contacts", function(){
 		// just need to send back a new id
 		return {id: (id++)}
 	})
 
 	// update
-	$.fixture("PUT /contacts/{id}", function(){
+	can.fixture("PUT /contacts/{id}", function(){
 		// just send back success
 		return {};
 	})
 
 	// destroy
-	$.fixture("DELETE /contacts/{id}", function(){
+	can.fixture("DELETE /contacts/{id}", function(){
 		// just send back success
 		return {};
 	});
@@ -88,7 +88,7 @@ function($){
 		}
 	];
 
-	$.fixture('GET /categories', function(){
+	can.fixture('GET /categories', function(){
 		return [CATEGORIES];
 	});
 
