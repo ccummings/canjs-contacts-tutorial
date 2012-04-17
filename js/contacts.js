@@ -40,6 +40,14 @@ function($){
 			email: 'curtis@bitovi.com',
 			phone: '0123456789',
 			category: 'friends'
+		},
+		{
+			id: 3,
+			name: 'Brian',
+			address: '1 CanJS Way',
+			email: 'brian@bitovi.com',
+			phone: '0123456789',
+			category: 'family'
 		}
 	];
 
