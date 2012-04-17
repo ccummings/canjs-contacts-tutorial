@@ -19,7 +19,6 @@ function($){
 			return contacts;
 		},
 		count: function(category) {
-			this.attr('length');
 			return this.filter(category).length;
 		}
 	})
