@@ -1,6 +1,51 @@
 steal('can/model', 'can/util/fixture', 'can/control', 'can/control/route', 'can/view/ejs', 'can/route',
 function($){
 
+	var CONTACTS = [
+		{
+			id: 1,
+			name: 'William',
+			address: '1 CanJS Way',
+			email: 'william@husker.com',
+			phone: '0123456789',
+			category: 'co-workers'
+		},
+		{
+			id: 2,
+			name: 'Laura',
+			address: '1 CanJS Way',
+			email: 'laura@starbuck.com',
+			phone: '0123456789',
+			category: 'friends'
+		},
+		{
+			id: 3,
+			name: 'Lee',
+			address: '1 CanJS Way',
+			email: 'lee@apollo.com',
+			phone: '0123456789',
+			category: 'family'
+		}
+	];
+
+	var CATEGORIES = [
+		{
+			id: 1,
+			name: 'Family',
+			data: 'family'
+		},
+		{
+			id: 2,
+			name: 'Friends',
+			data: 'friends'
+		},
+		{
+			id: 3,
+			name: 'Co-workers',
+			data: 'co-workers'
+		}
+	];
+
 	Contact = can.Model({
 		findAll: 'GET /contacts',
 		create  : "POST /contacts",
@@ -21,34 +66,11 @@ function($){
 		count: function(category) {
 			return this.filter(category).length;
 		}
-	})
+	});
 
-	var CONTACTS = [
-		{
-			id: 1,
-			name: 'Justin',
-			address: '1 CanJS Way',
-			email: 'justin@bitovi.com',
-			phone: '0123456789',
-			category: 'co-workers'
-		},
-		{
-			id: 2,
-			name: 'Curtis',
-			address: '1 CanJS Way',
-			email: 'curtis@bitovi.com',
-			phone: '0123456789',
-			category: 'friends'
-		},
-		{
-			id: 3,
-			name: 'Brian',
-			address: '1 CanJS Way',
-			email: 'brian@bitovi.com',
-			phone: '0123456789',
-			category: 'family'
-		}
-	];
+	Category = can.Model({
+		findAll: 'GET /categories'
+	},{});
 
 	can.fixture('GET /contacts', function(){
 		return [CONTACTS];
@@ -72,28 +94,6 @@ function($){
 		// just send back success
 		return {};
 	});
-
-	Category = can.Model({
-		findAll: 'GET /categories'
-	},{});
-
-	var CATEGORIES = [
-		{
-			id: 1,
-			name: 'Family',
-			data: 'family'
-		},
-		{
-			id: 2,
-			name: 'Friends',
-			data: 'friends'
-		},
-		{
-			id: 3,
-			name: 'Co-workers',
-			data: 'co-workers'
-		}
-	];
 
 	can.fixture('GET /categories', function(){
 		return [CATEGORIES];
@@ -142,7 +142,7 @@ function($){
 			this.options.contacts.push(contact);
 			this.filteredContacts.push(contact);
 		},
-	})
+	});
 
 	Create = can.Control({
 		render: function() {
@@ -191,7 +191,7 @@ function($){
 		'.cancel click' : function(){
 			this.hide();
 		}
-	})
+	});
 
 	Filter = can.Control({
 		init: function(){
@@ -215,22 +215,23 @@ function($){
 		'{Contact} created' : function(list, ev, item){
 			this.render();
 		}
-	})
+	});
 
-	Category.findAll({}, function(categories){
-		new Create('#create', {
-			categories: categories
-		});
-		Contact.findAll({}, function(contacts){
-			new Filter('#filter', {
-				contacts: contacts,
+	$(function(){
+		Category.findAll({}, function(categories){
+			new Create('#create', {
 				categories: categories
-			})
-			new Contacts('#contacts', {
-				contacts: contacts,
-				categories: categories
+			});
+			Contact.findAll({}, function(contacts){
+				new Filter('#filter', {
+					contacts: contacts,
+					categories: categories
+				});
+				new Contacts('#contacts', {
+					contacts: contacts,
+					categories: categories
+				});
 			})
 		})
 	});
-	
 })

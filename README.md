@@ -75,16 +75,18 @@
 		- Contact
 		- Filter
 
-### Part 3: Add/Edit Contacts
+### Part 3: Editing Contacts
+
+- Additions to Contact
+- Updating a contact 
+- Updating contact in model
+- Deleting a contact instance
+- Removing contact from model
+
+### Part 4: Add Contacts
 
 - CreateView
 - Create Control
 - Adding contact to Model
 - Rendering a new contact
-- Deleting a contact
-- Removing contact from model
-
-### Part 4: Editing
-
-- Contact View
-- Contact Control
+	- Contact
