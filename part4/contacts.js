@@ -138,9 +138,8 @@ function($){
 			this.render(data.category);
 		},
 		'{Contact} created' : function(list, ev, contact){
-			console.log('created', contact);
 			this.options.contacts.push(contact);
-			this.filteredContacts.push(contact);
+			this.render();
 		},
 	});
 

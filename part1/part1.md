@@ -223,7 +223,9 @@ Templates can be loaded from a file, string or script tag. We will load our temp
 </script>
 ```
 
-The `contactList` view is what will render a list of contacts. It uses the EJS `list` helper to invoke a callback function on each item in the list. The callback here renders the `contactView` template for each of our contacts. The arrow syntax in the magic tags of the li is an element callback. Everything after the arrow is executed with `el` being set to the element containing the magic tags. In this case, the element callback is adding the contact information to the data of the li. You'll see why this is important a little later in the series.
+The `contactList` view is what will render a list of contacts. It uses the EJS `list` helper to invoke a callback function on each item in the list. The callback here renders the `contactView` template for each of our contacts. The `list` helper isn't just a way to loop over a list, it is used specifically for observable lists and will be re-run anytime the length of the list is updated. This will be useful when we start adding and removing contacts in our application because anytime a contact is added or removed from the list, the loop will be run again. 
+
+The arrow syntax in the magic tags of the li is an element callback. Everything after the arrow is executed with `el` being set to the element containing the magic tags. In this case, the element callback is adding the contact information to the data of the li. You'll see why this is important a little later in the series.
 
 The `contactView` renders a single contact. Each piece of data is output in an input tag. While that does nothing for us now, later in this tutorial series we'll use these for adding and updating information. There is a remove link that we will also use later. The rest of the template is just HTML used to make a contact look pretty.
 

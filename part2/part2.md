@@ -61,6 +61,7 @@ init: function() {
 	this.render(can.route.attr('category'));
 },
 render: function(category){
+	category = category || can.route.attr('category');
 	this.filteredContacts = this.options.contacts.filter(category);
 	this.element.html(can.view('contactsList', {
 		contacts: this.filteredContacts,
@@ -144,4 +145,4 @@ In this tutorial we added filtering to our contacts application and setup routin
 
 We saw how to bind to route changes and other DOM events using a `can.Control` and we added helper functions to a `Model.List`. We explored how route data can be read and updated using `can.route`. 
 
-In the next part of this tutorial, we'll see how we can edit and delete contacts and ave these changes in our models.
+In the next part of this tutorial, we'll see how we can edit and delete contacts and have these changes in our models.
