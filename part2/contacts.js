@@ -100,7 +100,7 @@ function($){
 	});
 
 	can.route( 'filter/:category' )
-	can.route( '', { category: 'all' } )
+	can.route('', {category: 'all' })
 
 	Contacts = can.Control({
 		init: function(){
@@ -134,12 +134,6 @@ function($){
 			this.element.find('[data-category]').parent().removeClass('active');
 			el.parent().addClass('active');
 			can.route.attr('category', el.data('category'));
-		},
-		'{Contact} updated' : function(list, ev, item){
-			this.render();
-		},
-		'{Contact} created' : function(list, ev, item){
-			this.render();
 		}
 	});
 

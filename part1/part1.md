@@ -99,7 +99,7 @@ Save this in the js folder as `contacts.js`. These arrays of objects are sample 
 
 ## Models
 
-A model is one way to represent data in our application. We need two models: one for contacts and one for categories. Add this code directly below the array in `contacts.js`:
+A model is one way to represent data in our application. We need two models: one for contacts and one for categories. Add this code directly below the arrays in `contacts.js`:
 
 ```js
 Contact = can.Model({
@@ -117,6 +117,8 @@ Category = can.Model({
 This creates two models: `Contact` and `Category`. A model has 5 static methods you can use to create, retrieve, update and delete data. They are `findAll`, `findOne`, `create`, `update` and `destroy`. 
 
 While it's possible to make our models work with any sort of backend, we have defined our models as if they were going to use a RESTful JSON backend. You may have noticed that these models are missing a few of the static functions I listed. That's because we don't need those operations on those models in our application, so they are omitted.
+
+It's important to point out here, that the model instances in CanJS are actually observables. In CanJS `can.Observe` provides the observable pattern for JavaScript objects. This means you can get and set properties, using `attr` and bind to property changes via a change event. When we use `findAll`, we are getting a `Model.List` which inherits `can.Observe.List`, which provides the obervable pattern for JavaScript arrays. A `Model.List` will fire events when an element is added, removed or updated in the list that can be bound to similar to individual instances.
 
 ## Fixtures
 
@@ -149,9 +151,9 @@ can.fixture('GET /categories', function(){
 });
 ```
 
-The first parameter to `can.fixture` is the url we want to intercept and the second is a file or function that is used to generate a response. Often we want fixtures to intercept multiple urls with one fixture. For this we use templated urls. To use them, just add `{}` to the url where you want to match wilcards.
+The first parameter to `can.fixture` is the URL we want to intercept and the second is a file or function that is used to generate a response. Often we want fixtures to intercept multiple URLs with one fixture. For this we use templated URLs. To use them, just add `{}` to the URL where you want to match wilcards.
 
-The first four fixtures simulate the `GET`, `POST`, `PUT` and `DELETE` ajax requests we will make from our `Contact` model and the fifth fixture is for the `GET` request from the `Category` model. We are using templated urls so any REST requests containing an id get intercepted.
+The first four fixtures simulate the `GET`, `POST`, `PUT` and `DELETE` ajax requests we will make from our `Contact` model and the fifth fixture is for the `GET` request from the `Category` model. We are using templated URLs so any REST requests containing an id get intercepted.
 
 ## Views
 
@@ -242,10 +244,9 @@ So we have some models and we have some views. Now we need to hook these up usin
 ```js
 Contacts = can.Control({
 	init: function(){
-		this.render(can.route.attr('category'));
+		this.render();
 	},
 	render: function(category){
-		category = category || can.route.attr('category');
 		this.element.html(can.view('contactsList', {
 			contacts: this.options.contacts,
 			categories: this.options.categories

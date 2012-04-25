@@ -86,10 +86,9 @@ function($){
 
 	Contacts = can.Control({
 		init: function(){
-			this.render(can.route.attr('category'));
+			this.render();
 		},
-		render: function(category){
-			category = category || can.route.attr('category');
+		render: function(){
 			this.element.html(can.view('contactsList', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
