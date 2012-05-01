@@ -25,12 +25,10 @@
 				</div>
 			</div>
 		</div>
-		<!-- Can't dop this until we have a fixtures plugin
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
-		<script src="js/can.jquery.js"></script>
-		<script src="js/can.util.fixture.js"></script>
-		<script src="js/contacts.js"></script>-->		
-		<script src="../steal/steal.js?part1/contacts.js"></script>
+		<script src="js/can.jquery.min.js"></script>
+		<script src="js/can.fixture.js"></script>
+		<script src="js/contacts.js"></script>	
 		<script type="text/ejs" id="contactsList">
 			<ul class="unstyled clearfix">
 				<% list(contacts, function(contact){ %>
@@ -44,13 +42,14 @@
 		</script>
 		<script type="text/ejs" id="contactView">
 			<a href="javascript://" class="remove"><i class="icon-remove"></i></a>
-			<form class="form-horizontal">
+			<form>
 				<div class="row">
 					<div class="span2">
 						<img src="img/contact.png" width="100" height="100">
 					</div>
 					<div class="span3">
-						<input type="text" name="name" placeholder="Add Name" <%= !contact.attr('name') ? "class=\"empty\"" : "value=\"" + contact.name + "\"" %>>
+						<input type="text" name="name" placeholder="Add Name" 
+							<%= !contact.attr('name') ? "class='empty'" : "value='" + contact.name + "'" %>>
 						<select name="category">
 							<% $.each(categories, function(i, category){ %>
 								<option value="<%= category.data %>" <%= contact.category === category.data ? "selected" : "" %>>
@@ -60,27 +59,16 @@
 						</select>
 					</div>
 					<div class="span3">
-						<fieldset>
-							<div class="control-group">
-								<label class="control-label">Address</label>
-								<div class="controls">
-									<input type="text" name="address" <%= !contact.attr('address') ? "class=\"empty\"" : "value=\"" + contact.address + "\"" %>>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label">Phone</label>
-								<div class="controls">
-									<input type="text" name="phone" <%= !contact.attr('phone') ? "class=\"empty\"" : "value=\"" + contact.phone + "\"" %>>
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label">Email</label>
-								<div class="controls">
-									<input type="text" name="email" <%= !contact.attr('email') ? "class=\"empty\"" : "value=\"" + contact.email + "\"" %>>
-								</div>
-							</div>
-						</fieldset>
-					</span>
+						<label>Address</label>
+						<input type="text" name="address" 
+							<%= !contact.attr('address') ? "class='empty'" : "value='" + contact.address + "'" %>>
+						<label>Phone</label>
+						<input type="text" name="phone" 
+							<%= !contact.attr('phone') ? "class='empty'" : "value='" + contact.phone + "'" %>>
+						<label>Email</label>
+						<input type="text" name="email" 
+							<%= !contact.attr('email') ? "class='empty'" : "value='" + contact.email + "'" %>>
+					</div>
 				</div>
 			</form>
 		</script>

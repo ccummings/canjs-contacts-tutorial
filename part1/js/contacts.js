@@ -1,6 +1,4 @@
-steal('can/model', 'can/util/fixture', 'can/control', 'can/control/route', 'can/view/ejs', 'can/route',
-function($){
-
+(function(){
 	var CONTACTS = [
 		{
 			id: 1,
@@ -86,9 +84,6 @@ function($){
 
 	Contacts = can.Control({
 		init: function(){
-			this.render();
-		},
-		render: function(){
 			this.element.html(can.view('contactsList', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
@@ -97,13 +92,14 @@ function($){
 	});
 
 	$(function(){
-		Category.findAll({}, function(categories){
-			Contact.findAll({}, function(contacts){
-				new Contacts('#contacts', {
-					contacts: contacts,
-					categories: categories
-				});
+		$.when(Category.findAll(), Contact.findAll()).then(function(categoryResponse, contactResponse){
+			var categories = categoryResponse[0], 
+				contacts = contactResponse[0];
+
+			new Contacts('#contacts', {
+				contacts: contacts,
+				categories: categories
 			});
 		});
 	});
-})
+})()

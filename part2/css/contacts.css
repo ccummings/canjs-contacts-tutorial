@@ -30,17 +30,16 @@ h1 {
 	margin-bottom: 0;
 }
 
-.contact .form-horizontal .control-label {
+.contact form label {
+	float: left;
+	padding-top: 5px;
+	text-align: right;
 	width: 60px;
 }
 
-.contact .control-group {
-	margin-bottom: 0px;
-	width: 80px;
-}
-
-.contact .form-horizontal .controls {
-	margin-left: 80px;
+.contact form input {
+	margin-left: 10px;
+	margin-bottom: 0;
 }
 
 .contact label {
@@ -75,6 +74,7 @@ h1 {
 	height: 26px;
 	margin-bottom: 1px;
 	width: 200px;
+	margin-left: 0;
 }
 
 .contact [name="category"]{

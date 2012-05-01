@@ -1,6 +1,4 @@
-steal('can/model', 'can/util/fixture', 'can/control', 'can/control/route', 'can/view/ejs', 'can/route',
-function($){
-
+(function(){
 	var CONTACTS = [
 		{
 			id: 1,
@@ -55,9 +53,10 @@ function($){
 
 	Contact.List = can.Model.List({
 		filter: function(category){
+			this.attr('length');
 			var contacts = new Contact.List([]);
 			this.each(function(contact, i){
-				if(category === 'all' || category === contact.category) {
+				if(category === 'all' || category === contact.attr('category')) {
 					contacts.push(contact)
 				}
 			})
@@ -81,13 +80,13 @@ function($){
 	can.fixture("POST /contacts", function(){
 		// just need to send back a new id
 		return {id: (id++)}
-	})
+	});
 
 	// update
 	can.fixture("PUT /contacts/{id}", function(){
 		// just send back success
 		return {};
-	})
+	});
 
 	// destroy
 	can.fixture("DELETE /contacts/{id}", function(){
@@ -99,24 +98,18 @@ function($){
 		return [CATEGORIES];
 	});
 
-	can.route( 'filter/:category' )
-	can.route( '', { category: 'all' } )
+	can.route( 'filter/:category' );
+	can.route( '', { category: 'all' } );
 
 	Contacts = can.Control({
 		init: function(){
-			this.render(can.route.attr('category'));
-		},
-		render: function(category){
-			category = category || can.route.attr('category');
-			this.filteredContacts = this.options.contacts.filter(category);
 			this.element.html(can.view('contactsList', {
-				contacts: this.filteredContacts,
+				contacts: this.options.contacts,
 				categories: this.options.categories
 			}));
 		},
 		updateContact: function(el){
 			var contact = el.closest('.contact').data('contact');
-
 			contact.attr(el.attr('name'), el.val()).save();
 		},
 		'.contact input focusout': function(el, ev) {
@@ -124,58 +117,41 @@ function($){
 		},
 		'.contact input keyup': function(el, ev) {
 			if(ev.keyCode == 13){
-				el.trigger('blur')
+				el.trigger('blur');
 			}
 		},
 		'.contact select change': function(el, ev) {
-			this.updateContact(el)
-			this.render()
+			this.updateContact(el);
 		},
 		'.remove click': function(el, ev){
 			el.closest('.contact').data('contact').destroy();
 		},
-		'filter/:category route': function( data ) {
-			this.render(data.category);
-		},
 		'{Contact} created' : function(list, ev, contact){
 			this.options.contacts.push(contact);
-			this.render();
-		},
+		}
 	});
 
 	Create = can.Control({
-		render: function() {
+		show: function(){
 			this.contact = new Contact();
 			this.element.html(can.view('createView', {
 				contact: this.contact,
 				categories: this.options.categories
 			}));
-		},
-		show: function(){
-			this.render();
 			this.element.slideDown(200);
 		},
 		hide: function(){
-			this.element.slideUp(200)
+			this.element.slideUp(200);
 		},
 		'{document} #new-contact click': function(){
 			this.show();
 		},
-		createContact: function(el) {
-			var name = this.element.find('[name="name"]').val();
-			if(name !== "") {
-				var address = this.element.find('[name="address"]').val(),
-					phone = this.element.find('[name="phone"]').val(),
-					email = this.element.find('[name="email"]').val(),
-					category = this.element.find('[name="category"]').val();
-
-				this.contact.attr({
-					name: name,
-					address: address,
-					phone: phone,
-					email: email,
-					category: category
-				}).save();
+		createContact: function() {
+			var form = this.element.find('form');
+				values = can.deparam(form.serialize());
+				
+			if(values.name !== "") {
+				this.contact.attr(values).save();
 				this.hide();
 			}
 		},
@@ -194,9 +170,6 @@ function($){
 
 	Filter = can.Control({
 		init: function(){
-			this.render();
-		},
-		render: function(){
 			this.element.html(can.view('filterView', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
@@ -207,30 +180,25 @@ function($){
 			this.element.find('[data-category]').parent().removeClass('active');
 			el.parent().addClass('active');
 			can.route.attr('category', el.data('category'));
-		},
-		'{Contact} updated' : function(list, ev, item){
-			this.render();
-		},
-		'{Contact} created' : function(list, ev, item){
-			this.render();
 		}
 	});
 
 	$(function(){
-		Category.findAll({}, function(categories){
+		$.when(Category.findAll(), Contact.findAll()).then(function(categoryResponse, contactResponse){
+			var categories = categoryResponse[0], 
+				contacts = contactResponse[0];
+
 			new Create('#create', {
 				categories: categories
 			});
-			Contact.findAll({}, function(contacts){
-				new Filter('#filter', {
-					contacts: contacts,
-					categories: categories
-				});
-				new Contacts('#contacts', {
-					contacts: contacts,
-					categories: categories
-				});
-			})
-		})
+			new Filter('#filter', {
+				contacts: contacts,
+				categories: categories
+			});
+			new Contacts('#contacts', {
+				contacts: contacts,
+				categories: categories
+			});
+		});
 	});
-})
+})();

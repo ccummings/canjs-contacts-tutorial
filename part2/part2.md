@@ -1,10 +1,10 @@
-In this tutorial, we're going to continue building a contacts manager using CanJS and jQuery. In part one, we created the models, views and controls needed to display a list of contacts.
+In this tutorial, we're going to continue building a contacts manager using CanJS and jQuery. In part one, we created the Models, Views and Controls needed to display a list of contacts.
 
 In this part of the tutorial, we're going to learn how to filter our list of contacts by category using routing. We'll be adding to the the source files from part 1 so if you haven't done so already, go read part 1 to catch up, we'll be here when you're ready.
 
 ## Routing
 
-Routing in CanJS is achieved by using `can.route`. It is a special observable that updates and responds to changes in `window.location.hash`. `can.route` uses routes to translate URLs into property values resulting in pretty URLs like `#!/filter/all`. If no routes are provided, it just serializes the route into URL encoded notation like `#!&category=all`.
+Routing in CanJS is achieved using `can.route`. It is a special observable that updates and responds to changes in `window.location.hash`. `can.route` uses routes to translate URLs into property values giving you pretty URLs like `#!/filter/all`. If no routes are provided, it just serializes the route into URL encoded notation like `#!&category=all`.
 
 In our application, we will use routing to filter the list of contacts by category. Add the following code to your `contacts.js` file:
 
@@ -13,20 +13,21 @@ can.route( 'filter/:category' )
 can.route('', {category: 'all' })
 ```
 
-The first line creates a route with a `category` property that we will be able to read and update. the next line creates a default route by setting the `category` property to `all`. 
+The first line creates a route with a `category` property that we will be able to read and update. The next line creates a default route by setting the `category` property to `all`. 
 
-When you load your application without a hash or with a hash that doesn't match our defined route, the hash will be set to `#!filter/all`. If you already have a hash that matches our route like `#!filter/friends`, the application will use that.
+When your application loads without a hash or with a hash that doesn't match our defined route, it will be set to `#!filter/all`. If you already have a hash that matches our route like `#!filter/friends`, the application will use that.
 
 ## Using Model.Lists
 
-A `Model.List` is an observable array of model instances and is returned by a model's `findAll` function. When you define a `Model` like `Contact`, a `Model.List` for that type of model is automatically created. We can extend this created list to add helper functions that operate on a list of model instances of a specific type. We are going to add some helper methods to `Contact.List` that will filter a list of contacts and tell us how many contacts are in each category. Add this to `contacts.js` immediately after the `Contact` model:
+A `Model.List` is an observable array of model instances and is returned by a model's `findAll()` function. When you define a `Model` like `Contact`, a `Model.List` for that type of model is automatically created. We can extend this created list to add helper functions that operate on a list of model instances of a specific type. We are going to add some helper methods to `Contact.List` that will filter a list of contacts and tell us how many contacts are in each category. Add this to `contacts.js` immediately after the `Contact` model:
 
 ```js
 Contact.List = can.Model.List({
 	filter: function(category){
+		this.attr('length');
 		var contacts = new Contact.List([]);
 		this.each(function(contact, i){
-			if(category === 'all' || category === contact.category) {
+			if(category === 'all' || category === contact.attr('category')) {
 				contacts.push(contact)
 			}
 		})
@@ -37,49 +38,40 @@ Contact.List = can.Model.List({
 	}
 });
 ```
+
 The two helper functions we have added are:
 
 - `filter`: loops through each contact in a list and returns a new `Contact.List` of contacts within a category
-- `count`: returns the number of contacts in a category using the `filter` helper function
+- `count`: returns the number of contacts in a category using the `filter()` helper function
 
 ## Filtering the List of Contacts
 
-Now we need to modify our `Contact` control to filter the list of contacts based on the current hash. First things first, let's make our Control listen for route changes. Add this code to the `Contact` control in `contacts.js` after the `render` function:
+Now we need to modify our `contactList` view to filter the list of contacts based on the current hash. In the `contactList` view, change the parameter passed to the `list` helper to `contacts.filter(can.route.attr('category')`. Your view should look like this when you're done:
 
 ```js
-'filter/:category route': function(data) {
-	this.render(data.category);
-}
-```
+<script type="text/ejs" id="contactsList">
+	<ul class="unstyled clearfix">
+		<% list(contacts.filter(can.route.attr('category')), function(contact){ %>
+			<li class="contact span8" <%= (el)-> el.data('contact', contact) %>>
+				<div class="">
+					<%== can.view.render('contactView', {contact: contact, categories: categories}) %>
+				</div>
+			</li>
+		<% }) %>
+	</ul>
+</script>
+```		
 
-This is an example of binding to events using a `can.Control`. If the hash changes and looks like this route, this function will be called. The function simply extracts the category from the route and calls the render function with the new category as a parameter.
-
-We're not done with `Contact` just yet. We need to filter the list of contacts that we pass to our view, so only contacts with the right category are rendered. We modify the `init` and `render` function inside `Contact` in `contacts.js` to look like this:
-
-```js
-init: function() {
-	this.render(can.route.attr('category'));
-},
-render: function(category){
-	category = category || can.route.attr('category');
-	this.filteredContacts = this.options.contacts.filter(category);
-	this.element.html(can.view('contactsList', {
-		contacts: this.filteredContacts,
-		categories: this.options.categories
-	}));
-},
-```
-
-In `init`, we pass the current category to the `render` function. In `render`, we add a parameter to the function signature and create a variable named `this.filteredContacts`, which we set to be the `Contact.List` returned by our `filter` helper function we added earlier. The only thing left to do is pass `this.filteredContacts` to the `can.view` function.
+Here, we are calling the `filter()` helper function and passing in the current category from the route we defined. You may have noticed the `this.attr('length')` line in the `filter()` helper function. We put that there because we want the filtered list to automatically update if a contact is added or removed from the current filtered list. Since we are in a view, using `attr()` will tell EJS to make this filtered list live.
 
 ## Filter Control
 
-Our contacts now get filtered when the category in the URL is changed. What we need now, is a way to list all available categories, how many contacts are in each and a way to change the hash. the `Filter` control will do just that.
+Our contacts now get filtered when the category in the URL is changed. What we need now, is a way to list all available categories, how many contacts are in each and a way to change the hash. the `Filter` control will do all of that.
 
 First we'll create the view for our new Control. Add this template to your `index.html` file below the other views:
 
 ```html
-<script type="text/ejs" id="filterView">
+	<script type="text/ejs" id="filterView">
 	<ul class="nav nav-list">
 		<li class="nav-header">Categories</li>
 		<li>
@@ -94,16 +86,13 @@ First we'll create the view for our new Control. Add this template to your `inde
 </script>
 ```
 
-We use `$.each` to loop through each category and render a link with a `data-category` attribute along with the name of the category. We are using the `count` helper from `Contact.List` to display how many contacts are in each category.
+We use `$.each` to loop through each category and render a link with a `data-category` attribute along with the name of the category. We are using the `count()` helper from `Contact.List` to display how many contacts are in each category. Again, the `this.attr('length')` line in the `filter()` helper function will make this live so whenever a contact is removed or added from a category, the count will be updated.
 
 Now add this code after the other Controls in `contacts.js`:
 
 ```js
 Filter = can.Control({
 	init: function(){
-		this.render();
-	},
-	render: function(){
 		this.element.html(can.view('filterView', {
 			contacts: this.options.contacts,
 			categories: this.options.categories
@@ -120,29 +109,30 @@ Filter = can.Control({
 
 This Control renders the list of categories using the `filterView` template. We also bind to a click on any of the links iside the view. The click handler marks the link that was clicked as active by adding a class to its `<li>` and then updates the category in the route. This will change the hash, which will cause the `Contact` controller to re-render the list of contacts.
 
-To create an instance of the `Filter` Control, we add this code to `contacts.js` just after we create the `Contacts` instance inside the second `findAll` callback. Replace the current DOM ready function with this:
+To create an instance of the `Filter` Control, we add this code to `contacts.js` just after we create the `Contacts` instance. Your DOM ready function should look like this:
 
 ```js
 $(function(){
-	Category.findAll({}, function(categories){
-		Contact.findAll({}, function(contacts){
-			new Contacts('#contacts', {
-				contacts: contacts,
-				categories: categories
-			});
-			new Filter('#filter', {
-				contacts: contacts,
-				categories: categories
-			});
-		})
+	$.when(Category.findAll(), Contact.findAll()).then(function(categoryResponse, contactResponse){
+		var categories = categoryResponse[0], 
+			contacts = contactResponse[0];
+
+		new Filter('#filter', {
+			contacts: contacts,
+			categories: categories
+		});
+		new Contacts('#contacts', {
+			contacts: contacts,
+			categories: categories
+		});
 	});
 })
 ```
 
 ## Summary
 
-In this tutorial we added filtering to our contacts application and setup routing.
+In this tutorial we added filtering to our contacts application and using can.route`.
 
-We saw how to bind to route changes and other DOM events using a `can.Control` and we added helper functions to a `Model.List`. We explored how route data can be read and updated using `can.route`. 
+We saw how live binding can be used to keep our UI in synch with our data. We also learned how to add helper functions to a `Model.List` and explored how route data can be read and updated using `can.route`. 
 
-In the next part of this tutorial, we'll see how we can edit and delete contacts and have these changes in our models.
+In the next part of this tutorial, we'll see how we can edit and delete contacts and save these changes in our models.

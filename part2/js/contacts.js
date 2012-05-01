@@ -1,6 +1,4 @@
-steal('can/model', 'can/util/fixture', 'can/control', 'can/control/route', 'can/view/ejs', 'can/route',
-function($){
-
+(function(){
 	var CONTACTS = [
 		{
 			id: 1,
@@ -55,9 +53,10 @@ function($){
 
 	Contact.List = can.Model.List({
 		filter: function(category){
+			this.attr('length');
 			var contacts = new Contact.List([]);
 			this.each(function(contact, i){
-				if(category === 'all' || category === contact.category) {
+				if(category === 'all' || category === contact.attr('category')) {
 					contacts.push(contact)
 				}
 			})
@@ -80,7 +79,7 @@ function($){
 	var id= 4;
 	can.fixture("POST /contacts", function(){
 		// just need to send back a new id
-		return {id: (id++)}
+		return {id: (id++)};
 	});
 
 	// update
@@ -99,31 +98,20 @@ function($){
 		return [CATEGORIES];
 	});
 
-	can.route( 'filter/:category' )
-	can.route('', {category: 'all' })
+	can.route( 'filter/:category' );
+	can.route('', {category: 'all' });
 
 	Contacts = can.Control({
 		init: function(){
-			this.render(can.route.attr('category'));
-		},
-		render: function(category){
-			category = category || can.route.attr('category');
-			this.filteredContacts = this.options.contacts.filter(category);
 			this.element.html(can.view('contactsList', {
-				contacts: this.filteredContacts,
+				contacts: this.options.contacts,
 				categories: this.options.categories
 			}));
-		},
-		'filter/:category route': function( data ) {
-			this.render(data.category);
-		},
+		}
 	});
 
 	Filter = can.Control({
 		init: function(){
-			this.render();
-		},
-		render: function(){
 			this.element.html(can.view('filterView', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
@@ -138,17 +126,18 @@ function($){
 	});
 
 	$(function(){
-		Category.findAll({}, function(categories){
-			Contact.findAll({}, function(contacts){
-				new Filter('#filter', {
-					contacts: contacts,
-					categories: categories
-				});
-				new Contacts('#contacts', {
-					contacts: contacts,
-					categories: categories
-				});
-			})
+		$.when(Category.findAll(), Contact.findAll()).then(function(categoryResponse, contactResponse){
+			var categories = categoryResponse[0], 
+				contacts = contactResponse[0];
+
+			new Filter('#filter', {
+				contacts: contacts,
+				categories: categories
+			});
+			new Contacts('#contacts', {
+				contacts: contacts,
+				categories: categories
+			});
 		});
-	})
-})
+	});
+})()
