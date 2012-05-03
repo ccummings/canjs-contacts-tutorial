@@ -1,0 +1,7 @@
+<ul class="unstyled clearfix">
+	<% list(contacts, function(contact){ %>
+		<li class="contact span8" <%= (el)-> el.data('contact', contact) %>>
+			<%== can.view.render('views/contactView.ejs', {contact: contact, categories: categories}) %>
+		</li>
+	<% }) %>
+</ul>

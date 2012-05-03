@@ -1,30 +1,31 @@
-This is part one of the three part tutorial that will teach you how to build a fully functional contacts manager application in JavaScript using CanJS and jQuery. When you're done with this tutorial, you'll have all you need to build your own JavaScript applications using CanJS.
+This is part one of a three part tutorial that will teach you how to build a contacts manager application in JavaScript using CanJS and jQuery. When you're done with this tutorial, you'll have all you need to build your own JavaScript applications using CanJS.
 
 ## Choosing the Right Tool
 
 
-Building a JavaScript application without the right tools is difficult. While jQuery is great at what it does, a DOM manipulation library doesn't provide any infrastructure for building apps. This is why you need to use a library like CanJS.
+Building a JavaScript application without the right tools is difficult. While jQuery is great at what it does, a DOM manipulation library doesn't provide any infrastructure for building applications. This is why you need to use a library like CanJS.
 
-CanJS is a lightweight MVC library that gives you the tools you need to build JavaScript apps. It provides all the structure of the MVC (Model-View-Control) pattern, templates with live binding, routing support and is [memory safe](http://bitovi.com/blog/2012/04/zombie-apocolypse.html). It supports jQuery, Zepto, Mootools, YUI and Dojo and has a rich set of extensions and plugins.
+CanJS is a lightweight MVC library that gives you the tools you need to build JavaScript apps. It provides all the structure of the MVC (Model-View-Control) pattern, templates with live binding, routing support and is [memory safe](http://bitovi.com/blog/2012/04/zombie-apocolypse.html). It supports jQuery, Zepto, Mootools, YUI, Dojo and has a rich set of extensions and plugins.
 
 In part one you will:
 
-- Create a Control and a View (client-side template) to display a list of contacts
-- Represent data in an application using Models
+- Create a Control and a View (client-side template) to display contacts
+- Represent data using Models
 - Simulate ajax responses using the fixtures plugin
 
 Excited? You should be. Now let's get coding.
 
 ## Setting Up Your Folders and HTML
 
-You'll need to create a folder for your application. Inside this folder you need four subfolders: css, js, views and img. Your folder structure should look like this when you're done:
+You'll need to create a folder for your application. Inside this folder you need four sub folders: css, js, views and img. Your folder structure should look like this when you're done:
 
 - contacts_manager
 	- css
 	- js
+	- views
 	- img
 
-We'll start with the following HTML. Save this as `index.html`:
+Save this as `index.html`:
 
 ```html
 <!doctype html>
@@ -62,7 +63,9 @@ We'll start with the following HTML. Save this as `index.html`:
 </html>
 ```
 
-At the bottom of the page we load jQuery, CanJS, the fixture plugin and our application code (`contacts.js`).
+At the bottom of the page we load jQuery, CanJS, the fixture plugin and your application code (`contacts.js`).
+
+The CSS and images for this tutorial can be downloaded using the link above.
 
 ## Building Your UI With Views
 
@@ -74,23 +77,23 @@ EJS templates look like HTML but with magic tags where you want dynamic behavior
 - `<%= CODE %>`: Runs a JavaScript statement and writes the **escaped** result into the resulting HTML
 - `<%== CODE %>`: Runs a JavaScript statement and writes the **unescaped** result into the resulting HTML (used for sub-templates)
 
-Templates can be loaded from a file or a script tag. In this tutorial templates will be loaded from EJS files. Save the following code as `contactsList.ejs` in your views folder:
+Templates can be loaded from a file or script tag. In this tutorial templates will be loaded from EJS files. Save the following code as `contactsList.ejs` in your views folder:
 
 ```html
 <ul class="unstyled clearfix">
 	<% list(contacts, function(contact){ %>
 		<li class="contact span8" <%= (el)-> el.data('contact', contact) %>>
-			<%== can.view.render('contactView', {contact: contact, categories: categories}) %>
+			<%== can.view.render('views/contactView.ejs', {contact: contact, categories: categories}) %>
 		</li>
 	<% }) %>
 </ul>
 ```
 
-The `contactList` view will render the list of contacts. Let's examine the template code here in more detail by looking at a few important lines:
+`contactLists.ejs` will render a list of contacts. Let's examine the template code here in more detail:
 
-- **Line 1**: Invoke a callback function on each contact in the list using the EJS `list()` helper. When used with an observable list, the `list()` helper will use live binding to re-run anytime the length of the list changes.
-- **Line 3**: Add the contact instance to the `<li`> using an element callback. Everything after the arrow is a function that will be executed with `el` set to the current element.
-- **Line 4**: Use `can.view.render()` to render the `contactView.ejs` sub-template for each contact. `can.view.render()` takes a template and data and returns HTML.
+- **Line 2**: The EJS `list()` helper invokes a callback function on each contact in the list. When used with an observable list, the `list()` helper will use live binding to re-run anytime the length of the list changes.
+- **Line 3**: Uses an element callback to add the contact instance to the data of the `<li>`. Everything after the arrow is wrapped in a function that will be executed with `el` set to the current element.
+- **Line 4**: Renders the `contactView.ejs` sub-template for each contact. `can.view.render()` takes a template and data as its parameters and returns HTML.
 
 Save this code as `contactView.ejs` in your views folder:
 
@@ -127,36 +130,42 @@ Save this code as `contactView.ejs` in your views folder:
 </form>
 ```
 
-`contactView.ejs` renders a single contact. Each piece of data is placed in an input tag. While that does nothing for us now, later in this tutorial these will be used to add and update a contact's information.
+`contactView.ejs` renders a single contact. Each property of a contact is placed in an input tag. These will be used to add and update a contact's information.
 
 ## Making Your Views Live
 
-Throughout these views, it seems like we are using `.attr()` to read properties in some places but not others. What's the difference? Using `attr()` tells EJS that we want that piece of code to update automatically when the underlying data changes. This is called live binding. In EJS, live binding is opt-in, meaning we have to tell EJS what data should be updated when the underlying data changes. If we use regular dot notation to access properties, they will not be live. Let's look at the name input from the `contactView.ejs` to see how this works:
+Anytime EJS encounters `attr()` while processing a template it knows that the surrounding code should be turned into an event handler bound to that property's changes. When the property is changed elsewhere in the app, the event handler is triggered and your UI will be updated. This is called live binding.
+
+EJS Live binding is opt-in. It only turns on if you use `attr()`.
+
+Let's look at the name `<input>` from the `contactView.ejs` to see how this works:
 
 ```html
 <input type="text" name="name" placeholder="Add Name" 
 	<%= !contact.attr('name') ? "class='empty'" : "value='" + contact.name + "'" %>>
 ```
 
-==
-Behind the scenes, EJS will turn this into an event handler listening to the contact's name property. When the name property changes elsewhere in the application `contact.attr('name', 'Doug')`, that event handler is triggered and the view will be updated.
-==
-
-/*When EJS encounters this template code, it will wrap the entire contents of the magic tags (`<%= %>`) in a function that will be called when the contact's name property is changed. 
-That's why we don't need to use .attr('name') a second time here and can use `contact.name` instead.*/
+The code in the magic tags will become an event handler bound to the contact's name property. When we update the name property, the event handler is run and the HTML will be updated.
 
 ## Organizing Application Logic Using can.Control
 
-`can.Control` creates an organized, memory-leak free, stateful control that can be used to create widgets or organize application logic. You create an instance of a Control on a DOM element and pass in any data your Control will need. You can define any number of functions in your Control and bind to events. When the element your Control is bound to is removed from the DOM, the Control destroys itself, cleaning up any bound event listeners.
+`can.Control` creates an organized, memory-leak free, stateful control that can be used to create widgets or organize application logic. You create an instance of a Control on a DOM element and pass it any data your Control will need. You can define any number of functions in your Control and bind to events. When the element your Control is bound to is removed from the DOM, the Control destroys itself, cleaning up any bound event listeners.
 
-To create a new Control use the `can.Control()` function. you pass it an object that contains functions, you can also pass in event listeners...we'll do that in part 2 and pass it an object containing functions and event bindings. 
+To create a new Control extend `can.Control()` by passing it an object containing functions you want to define. In part two, event listeners will be passed in as well.
 
-Let's create the Control that will manage our list of contacts. Add this to your `contacts.js` file:
+There are a few important variables and functions present in every Control instance:
+
+- `this` a reference to the Control instance
+- `this.element` the DOM element that you created the instance on
+- `this.options` an object containing any data passed to the instance when it was created
+- `init()` called when an instance is created
+
+Add this to your `contacts.js` file to create the Control that will manage contacts:
 
 ```js
 Contacts = can.Control({
 	init: function(){
-		this.element.html(can.view('contactsList', {
+		this.element.html(can.view('views/contactsList.ejs', {
 			contacts: this.options.contacts,
 			categories: this.options.categories
 		}));
@@ -164,25 +173,14 @@ Contacts = can.Control({
 })
 ```
 
-There are a few important variables and functions present in every Control instance:
+When an instance of `Contacts` is created, `init()` will do two things:
 
-- `this`: a reference to the Control instance
-- `this.element`: the DOM element that you created your instance on
-- `this.options`: an object containing any data you passed your instance when it was created
-- `init()`: called when an instance is created
-- `destory()`: called when this instance is destroyed
-
-==when an instance is created, the list of contacts is rendered==
-==This method does two things:
-- render view
-- use jQuery html function
-==
-
-The only thing to do when a `Contacts` instance is created, is render the list of contacts we pass into it. The `can.view()` function takes 2 parameters: the file, text or id of the script tag containing our template code and and data the view will use to render the HTML. Here we use the id `contactsList` and pass the list of contacts and the list of categories. Then we use jQuery's `.html()` function, which takes the document fragment returned by `can.view()` and populates the DOM element with the list of contacts.
+1. Uses `can.view()` to render contacts. `can.view()` takes 2 parameters: the file or id of the script tag containing our template code and data. It returns the rendered result as a documentFragment (a lightweight container that can hold DOM elements).
+2. Inserts the documentFragment from `can.view()` into the Control's element using jQuery's `.html()`.
 
 ## Representing Data Using Models
 
-A Model abstracts the data layer of an application. We'll need two models: one for contacts and one for categories. Add this code to `contacts.js`:
+A Model abstracts the data layer of an application. Two models are needed in this application: one for contacts and one for categories. Add this code to `contacts.js`:
 
 ```js
 Contact = can.Model({
@@ -197,24 +195,17 @@ Category = can.Model({
 },{});
 ```
 
-This creates two models: `Contact` and `Category`. A model has 5 static methods you can define to create, retrieve, update and delete data. They are `findAll`, `findOne`, `create`, `update` and `destroy`. You can overwrite these functions to work with any backend, but the easiest way to define a Model is using REST services like we have above.
-
-Our models here are missing a few of the static methods I mentioned because we won't need those operations in this application and can safely omit them.
+A model has 5 static methods you can define to create, retrieve, update and delete data. They are `findAll`, `findOne`, `create`, `update` and `destroy`. You can overwrite these functions to work with any back-end, but the easiest way to define a Model is using REST service like the code above. You can safely omit any static methods that won't be used in an application.
 
 It's important to point out here, that the model instances in CanJS are actually what we call 'observables'. `can.Observe` provides the observable pattern for objects and `can.Observe.List` provides the observable pattern for arrays. This means you can get and set properties using `attr()` and bind to changes in those properties. 
 
-==The findAll method returns a model.list, which is really a can.Observe.List== that triggers events when an element is added, removed or updated.
-When we use a Model's `findAll()` method, we are getting a `Model.List` which is a `can.Observe.List` that triggers events when an element is added, removed or updated.
+The `findAll()` method returns a `Model.list`, which is a `can.Observe.List` that triggers events when an element is added or removed from the list.
 
 ## Simulating a REST Service Using Fixtures
 
-Still with me? Great, because we are about to see how we can simulate ajax responses to build our JavaScript application without needing a backend.
+Fixtures intercept ajax requests and simulate their response with a file or function. This is great for testing, prototyping or when a back-end isn't ready yet. Fixtures are needed to simulate the REST service the models in this application are using.
 
-==move this inot the first sentence: This is great for testing, prototyping or when the back-end isn't ready yet==
-
-Fixtures intercept ajax requests and simulate their response with a file or function. We'll use fixtures to simulate a REST service that our Models are setup to use.
-
-But first, you'll need some sample data for our application. Add this code to `contacts.js`:
+But first, you'll need some sample data for the fixtures to use. Add this code to `contacts.js`:
 
 ```js
 var CONTACTS = [
@@ -263,7 +254,7 @@ var CATEGORIES = [
 ];
 ```
 
-Now that we have data, we have to wire them up to the services using fixtures. Using `can.fixture()`, which takes two parameters. The first is the URL we want to intercept and the second is a file or function that is used to generate a response. ==Often URLs you want to intercept are not dynamic but follow a pattern. In this case we use templates URLs==We often want fixtures to intercept multiple URLs with one fixture so we use templated URLs. Just add curly braces to the URL where you want to match wildcards.
+Now that you have some data, you need to wire it up to fixtures so you can simulate a REST service. `can.fixture()` takes two parameters. The first is the URL we want to intercept and the second is a file or function that is used to generate a response. Often URLs you want to intercept are dynamic and follow a pattern. In this case you should use templated URLs. Just add curly braces to the URL where you want to match wildcards.
 
 Add the following to `contacts.js`:
 
@@ -290,16 +281,16 @@ can.fixture('GET /categories', function(){
 });
 ```
 
-The first four fixtures simulate the `GET`, `POST`, `PUT` and `DELETE` ajax responses for the `Contact` model and the fifth fixture simulates the `GET` response for the `Category` model.
+The first four fixtures simulate the `GET`, `POST`, `PUT` and `DELETE` responses for the `Contact` model and the fifth fixture simulates the `GET` response for the `Category` model.
 
 ## Bootstrapping The Application
 
-Now that we have Models for our data, Views to render contacts and a Control to hook everything up, we need to kickstart this application.
+Your application has Models for your data, Views to render contacts and a Control to hook everything up, Now you need to kickstart the application.
 
 Add this to your `contacts.js` file:
 
 ```js
-$(function(){
+$(document).ready(function(){
 	$.when(Category.findAll(), Contact.findAll()).then(function(categoryResponse, contactResponse){
 		var categories = categoryResponse[0], 
 			contacts = contactResponse[0];
@@ -309,14 +300,22 @@ $(function(){
 			categories: categories
 		});
 	});
-})
+});
 ```
-==line number for breakdown==
 
-When the DOM is ready, we call `findAll()` on both of our models to retrieve all of the contacts and categories. Since `findAll()` returns a Deferred, we can use jQuery's `$.when()` to execute both requests in parlell. When both of these requests are complete, our callback function will be executed with the response of these two requests. These parameters are arrays, with the first index being the `Model.List` of model instances retrieved. In the callback, a new instance of the `Contact` Control is created on the `#contacts` element and is passed the list of contacts and categories.
+Let's take a closer look at what is happening in this code:
+
+- **Line 1**: Wait for the DOM to be ready using jQuery's document ready function.
+- **Line 2**: Call `findAll()` on both models to retrieve all of the contacts and categories. Since `findAll()` returns a Deferred, `$.when()` is used to make both requests in parallel and execute a callback when they are finished.
+- **Line 3-4**: Get the list of model instances from the response of the two `findAll()` calls. The responses are arrays, with the first index being the list of model instances retrieved.
+- **Line 6-9**: Create an instance of the `Contact` Control on the `#contacts` element. The list of contacts and categories are passed into the Control.
 
 ## Summary
 
-That's it for part one of this tutorial. You've been introduced to the core of CanJS: Models, Views and Controls. ==Models abstract the data layer==represent data in our applications, Views are templates that turn our data into HTML and Controls wire everything up.
+That's it for part one of this tutorial. You've been introduced to the core of CanJS: 
 
-In part 2, you'll create a Control and View to display categories and use routing to filter contacts. Hope to see you there.
+- `Models` abstract the data layer in your application
+- `Views` are templates that turn data into HTML
+- `Controls` wire everything up.
+
+In part two, you'll create a Control and View to display categories and use routing to filter contacts. Hope to see you there.
