@@ -9,7 +9,7 @@ CanJS is a lightweight MVC library that gives you the tools you need to build Ja
 
 In part one you will:
 
-- Create a Control and a View (client-side template) to display contacts
+- Create a Control and View (client-side template) to display contacts
 - Represent data using Models
 - Simulate ajax responses using the fixtures plugin
 

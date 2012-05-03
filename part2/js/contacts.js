@@ -103,7 +103,7 @@
 
 	Contacts = can.Control({
 		init: function(){
-			this.element.html(can.view('contactsList', {
+			this.element.html(can.view('views/contactsList.ejs', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
 			}));
@@ -112,7 +112,7 @@
 
 	Filter = can.Control({
 		init: function(){
-			this.element.html(can.view('filterView', {
+			this.element.html(can.view('views/filterView.ejs', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
 			}));
@@ -125,7 +125,7 @@
 		}
 	});
 
-	$(function(){
+	$(document).ready(function(){
 		$.when(Category.findAll(), Contact.findAll()).then(function(categoryResponse, contactResponse){
 			var categories = categoryResponse[0], 
 				contacts = contactResponse[0];

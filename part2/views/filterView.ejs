@@ -1,0 +1,11 @@
+<ul class="nav nav-list">
+	<li class="nav-header">Categories</li>
+	<li>
+		<a href="javascript://" data-category="all">All (<%= contacts.count('all') %>)</a>
+	</li>
+	<% $.each(categories, function(i, category){ %>
+		<li>
+			<a href="javascript://" data-category="<%= category.data %>"><%= category.name %> (<%= contacts.count(category.data) %>)</a>
+		</li>
+	<% }) %>
+</ul>
