@@ -16,5 +16,5 @@ Licenses of the projects used in this application:
 
 - CanJS: [MIT](http://www.opensource.org/licenses/mit-license.php)
 - jQuery: [MIT](http://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt) | [GPL](http://github.com/jquery/jquery/blob/master/GPL-LICENSE.txt)
-- Twitter [Bootstrap: Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0)
+- Twitter Bootstrap: [Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0)
 - Glyphicons Free: [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)
