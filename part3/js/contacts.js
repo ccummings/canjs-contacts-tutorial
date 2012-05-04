@@ -103,7 +103,7 @@
 
 	Contacts = can.Control({
 		init: function(){
-			this.element.html(can.view('contactsList', {
+			this.element.html(can.view('views/contactsList.ejs', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
 			}));
@@ -134,7 +134,7 @@
 	Create = can.Control({
 		show: function(){
 			this.contact = new Contact();
-			this.element.html(can.view('createView', {
+			this.element.html(can.view('views/createView.ejs', {
 				contact: this.contact,
 				categories: this.options.categories
 			}));
@@ -170,11 +170,12 @@
 
 	Filter = can.Control({
 		init: function(){
-			this.element.html(can.view('filterView', {
+			var category = can.route.attr('category') || "all";
+			this.element.html(can.view('views/filterView.ejs', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
 			}));
-			this.element.find('[data-category="' + (can.route.attr('category') || "all") + '"]').parent().addClass('active');
+			this.element.find('[data-category="' + category + '"]').parent().addClass('active');
 		},
 		'[data-category] click': function(el, ev) {
 			this.element.find('[data-category]').parent().removeClass('active');
@@ -183,7 +184,7 @@
 		}
 	});
 
-	$(function(){
+	$(document).ready(function(){
 		$.when(Category.findAll(), Contact.findAll()).then(function(categoryResponse, contactResponse){
 			var categories = categoryResponse[0], 
 				contacts = contactResponse[0];

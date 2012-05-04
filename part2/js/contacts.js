@@ -112,11 +112,12 @@
 
 	Filter = can.Control({
 		init: function(){
+			var category = can.route.attr('category') || "all";
 			this.element.html(can.view('views/filterView.ejs', {
 				contacts: this.options.contacts,
 				categories: this.options.categories
 			}));
-			this.element.find('[data-category="' + (can.route.attr('category') || "all") + '"]').parent().addClass('active');
+			this.element.find('[data-category="' + category + '"]').parent().addClass('active');
 		},
 		'[data-category] click': function(el, ev) {
 			this.element.find('[data-category]').parent().removeClass('active');

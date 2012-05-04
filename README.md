@@ -1,92 +1,27 @@
-# Contacts Tutorial
+# CanJS Contacts Manager
 
-## Structure of App
+This is the contacts manager built in the three part Nettuts+ tutorial series "Build a Contacts Manager Using CanJS".
 
-### 2 Models + Fixtures
+## Part 1
 
-- Contact
-- Category
+- Create a Control and View (client-side template) to display contacts
+- Represent data using Models
+- Simulate ajax responses using the fixtures plugin
 
-### 3 Controls
+_Tutorial_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part1) | [Download](#) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part1/)
 
-- Filter: Left nav filtering
-- Contacts: List of contacts
-- Create: Creates new contact
+## Part 2
 
-### Routes
+- Create a Control and View to display categories
+- Listen to events using a Control
+- Use routing to filter contacts
 
-- Pretty URLs #!filter/:category
+_Tutorial_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part2) | [Download](#) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part2/)
 
-### 4 Views
+## Part 3
 
-- ContactsList: List of contacts (renders multiple ContactView views)
-- CreateView: Renders a ContactView, this adds save/cancel buttons
-- ContactView: What a contact looks like (used for create and list)
-- Filter View: List of categories
+- Edit and delete contacts using the Contact Control
+- Create a Control and View to create contacts
+- Listen to DOM and Model events using Control's templated event handlers
 
-## Features
-
-### Create a contact
-
-- click the new contact button
-	- form slides down
-
-### Edit a contact
-
-- Each piece of data is already an input that activates on hover/focus
-	- just change the data and focus out or press enter to update the contact
-
-### Filter
-
-- Use navigation to filter what contacts are visible
-- number beside each filter will update when contacts are created & updated
-
-## Tutorial Breakdown
-
-### Part 1: Setup
-
-- Libraries Used
-- Basic HTML
-- Models
-	- Intro
-	- Contact
-	- Category
-- Fixtures
-	- Intro
-	- Contact
-	- Category
-- Views
-	- EJS Intro
-	- ContactsList
-	- ContactView
-- Controls
-	- Contacts
-
-### Part 2: Filtering & Routes
-
-- FilterView
-- Filter Control
-- Model.List
-	- Intro
-	- Contact.List
-- Routing
-	- Pretty URLs
-	- Responding to route changes
-		- Contact
-		- Filter
-
-### Part 3: Editing Contacts
-
-- Additions to Contact
-- Updating a contact 
-- Updating contact in model
-- Deleting a contact instance
-- Removing contact from model
-
-### Part 4: Add Contacts
-
-- CreateView
-- Create Control
-- Adding contact to Model
-- Rendering a new contact
-	- Contact
+_Tutorial_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part3) | [Download](#) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part3/)
