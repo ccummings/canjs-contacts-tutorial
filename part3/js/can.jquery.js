@@ -1,6 +1,6 @@
 (function(can, window, undefined){
-// # CanJS v3.3.3  
-// © 2012 Bitovi  
+// # CanJS v1.0
+// (c) 2012 Bitovi  
 // MIT license  
 // [http://canjs.us/](http://canjs.us/)
 
@@ -1282,6 +1282,7 @@
 			return count;
 		},
 		onready = !0,
+		boundtohashchange = false,
 		location = window.location,
 		each = can.each,
 		extend = can.extend;
@@ -1421,6 +1422,11 @@
 				onready = val;
 			}
 			if( val === true || onready === true ) {
+				if(boundtohashchange === false){ // make double sure this only happens once
+					// If the hash changes, update the `can.route.data`.
+					can.bind.call(window,'hashchange', setState);
+					boundtohashchange = true;
+				}
 				setState();
 			}
 			return can.route;
@@ -1462,9 +1468,6 @@
 			curParams = can.route.deparam( location.href.split(/#!?/)[1] || "" );
 			can.route.attr(curParams, true);
 		};
-
-	// If the hash changes, update the `can.route.data`.
-	can.bind.call(window,'hashchange', setState);
 
 	// If the `can.route.data` changes, update the hash.
     // Using `.serialize()` retrieves the raw data contained in the `observable`.
@@ -2756,4 +2759,12 @@
 			});
 		}
 	});
+
+	// Register as an AMD module if supported, otherwise attach to the window
+	if ( typeof define === "function" && define.amd ) {
+		define( "can", [], function () { return can; } );
+	} else {
+		window.can = can;
+	}
+
 })(can = {}, this )

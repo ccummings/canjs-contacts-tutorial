@@ -12,6 +12,10 @@ h1 {
 	display: none;
 }
 
+#contacts ul {
+	margin-left:0;list-style:none;
+}
+
 .contact {
 	border: 1px solid #ccc;
 	-moz-border-radius: 5px;

@@ -6,7 +6,7 @@
 		</div>
 		<div class="span3">
 			<input type="text" name="name" placeholder="Add Name" 
-				<%= !contact.attr('name') ? "class='empty'" : "value='" + contact.name + "'" %>>
+				<%= contact.attr('name') ? "value='" + contact.name + "'" : "class='empty'" %>>
 			<select name="category">
 				<% $.each(categories, function(i, category){ %>
 					<option value="<%= category.data %>" <%= contact.category === category.data ? "selected" : "" %>>
@@ -18,13 +18,13 @@
 		<div class="span3">
 			<label>Address</label>
 			<input type="text" name="address" 
-				<%= !contact.attr('address') ? "class='empty'" : "value='" + contact.address + "'" %>>
+				<%= contact.attr('address') ? "value='" + contact.address + "'" : "class='empty'" %>>
 			<label>Phone</label>
 			<input type="text" name="phone" 
-				<%= !contact.attr('phone') ? "class='empty'" : "value='" + contact.phone + "'" %>>
+				<%= contact.attr('phone') ? "value='" + contact.phone + "'" : "class='empty'" %>>
 			<label>Email</label>
 			<input type="text" name="email" 
-				<%= !contact.attr('email') ? "class='empty'" : "value='" + contact.email + "'" %>>
+				<%= contact.attr('email') ? "value='" + contact.email + "'" : "class='empty'" %>>
 		</div>
 	</div>
 </form>
