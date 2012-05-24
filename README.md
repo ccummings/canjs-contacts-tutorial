@@ -1,6 +1,6 @@
 # CanJS Contacts Manager
 
-This is the contacts manager built in the three part Nettuts+ tutorial series "Build a Contacts Manager Using CanJS".
+This is the contacts manager built in the three part Nettuts+ tutorial series "Diving into CanJS".
 
 ## Part 1
 
@@ -8,7 +8,7 @@ This is the contacts manager built in the three part Nettuts+ tutorial series "B
 - Represent data using Models
 - Simulate ajax responses using the fixtures plugin
 
-_Tutorial_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part1) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part1.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part1/)
+[Tutorial](http://net.tutsplus.com/tutorials/javascript-ajax/diving-into-canjs/) | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part1) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part1.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part1/)
 
 ## Part 2
 
@@ -16,7 +16,7 @@ _Tutorial_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/
 - Listen to events using a Control
 - Use routing to filter contacts
 
-_Tutorial_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part2) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part2.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part2/)
+_Tutorial (May 28)_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part2) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part2.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part2/)
 
 ## Part 3
 
@@ -24,4 +24,4 @@ _Tutorial_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/
 - Create a Control and View to create contacts
 - Listen to DOM and Model events using Control's templated event handlers
 
-_Tutorial_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part3) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part3.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part3/)
+_Tutorial (June 4)_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part3) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part3.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part3/)
