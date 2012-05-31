@@ -16,7 +16,7 @@ This is the contacts manager built in the three part Nettuts+ tutorial series "D
 - Listen to events using a Control
 - Use routing to filter contacts
 
-_Tutorial (May 28)_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part2) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part2.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part2/)
+[Tutorial](http://net.tutsplus.com/tutorials/javascript-ajax/diving-into-canjs-part-2/) | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part2) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part2.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part2/)
 
 ## Part 3
 
