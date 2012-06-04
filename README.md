@@ -24,4 +24,4 @@ This is the contacts manager built in the three part Nettuts+ tutorial series "D
 - Create a Control and View to create contacts
 - Listen to DOM and Model events using Control's templated event handlers
 
-_Tutorial (June 4)_ | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part3) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part3.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part3/)
+[Tutorial](http://net.tutsplus.com/tutorials/javascript-ajax/diving-into-canjs-part-3/) | [Source](https://github.com/ccummings/canjs-contacts-tutorial/tree/master/part3) | [Download](https://github.com/downloads/ccummings/canjs-contacts-tutorial/part3.zip) | [Demo](http://ccummings.github.com/canjs-contacts-tutorial/part3/)
